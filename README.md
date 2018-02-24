@@ -8,6 +8,8 @@ Screenshots are just images selected from the project's readmes. Images containi
 
 The project was created as an experiment for learning React.js and practicing AWS Lambda use.
 
+[Live demo](https://quasoft.github.io/gitshot/)
+
 [Screenshot of GitShot](docs/gitshot-screenshot.jpg)
 
 ## Credits
