@@ -1,108 +1,16 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import loader from'./loader.gif';
 import './App.css';
-import ImageMasonry from 'react-image-masonry';
-import axios from 'axios';
-import 'nodelist-foreach-polyfill';
-import Repository from './Repository.js';
+import TrendingRepositories from './TrendingRepositories';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.repositories = [];
-    this.state = {
-      ready: false,
-      repositories: [],
-      windowWidth: this.getWindowWidth()
-    };
-    this.resizeTimer = null;
-    this.handleWindowResize = this.handleWindowResize.bind(this);
-  }
-
-  getWindowWidth() {
-    let w = window,
-    d = document,
-    documentElement = d.documentElement,
-    body = d.querySelector('body'),
-    width = w.innerWidth || documentElement.clientWidth || body.clientWidth;
-    return width
-  }
-
-  handleWindowResize() {
-    let width = this.getWindowWidth();
-    this.setState({windowWidth: width});
-    this.forceUpdate();
-  }
-
-  trendingReposURL(date) {
-    return `https://raw.githubusercontent.com/quasoft/trending-daily/master/${date}.json`;
-  }
-
-  loadRepositories() {
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday = yesterday.toISOString().slice(0, 10)
-
-    axios.get(this.trendingReposURL(yesterday))
-      .then(res => {
-        // Merge repositories from all three categories
-        let merged = res.data.FirstTimers
-          .concat(res.data.TopNew)
-          .concat(res.data.RepeatPerformers);
-
-        // Remove duplicates
-        merged = merged.filter((item, pos) => merged.map(r => r.URL).indexOf(item.URL) === pos);
-       
-        let self = this;
-        merged.forEach(repo => {
-          // Ignore repositories without a screenshot
-          if (repo.Screenshot) {
-            self.repositories.push(repo);
-          }
-        });
-
-        this.setState({ repositories: this.repositories });
-        this.setState({ ready: true });
-      });
-  }
-
-  componentDidMount() {
-    window.addEventListener("resize", () => {
-      if (this.resizeTimer) {
-        clearTimeout(this.resizeTimer);
-      }
-      this.resizeTimer = setTimeout(this.handleWindowResize, 1);
-    });
-    
-    this.loadRepositories();
-  }
-
-  componentWillUnmount() {
-    if (this.resizeTimer) {
-      clearTimeout(this.resizeTimer);
-      this.resizeTimer = null;
-    }
-    window.addEventListener("resize", null);
-  }
-
   render() {
-    if (!this.state.ready) {
-      return(
-        <div id="waiting-overlay" className="waiting overlay">
-          <div className="loader">
-            <div className="inner"><span>GitShot loading...</span><br/><img src={loader} alt="Loading animation"/>
-            </div>
-          </div>
-        </div>
-      );
+    let dates = []
+    for (let i = 1; i <= this.props.numberOfDays; i++) {
+      let d = new Date();
+      d.setDate(d.getDate() - i);
+      dates.push(d);
     }
-
-    let numberOfColumns = 3;
-    if (this.state.windowWidth < 480)
-      numberOfColumns = 1
-    else if (this.state.windowWidth < 800)
-      numberOfColumns = 2;
 
     return (
       <div className="App">
@@ -114,22 +22,7 @@ class App extends Component {
             Hover an image to see more details about the repo.
           </p>
         </header>
-        <ImageMasonry
-          numCols={numberOfColumns}
-          containerWidth={"100%"}
-        >
-          {this.state.repositories.map((repo, i) => {
-            return (
-              <Repository
-                key={i}
-                Name={repo.Name}
-                URL={repo.URL}
-                Screenshot={repo.Screenshot}
-                Description={repo.Description}
-              />
-            );
-          })}
-        </ImageMasonry>
+        <TrendingRepositories dates={dates} />
       </div>
     );
   }
