@@ -4,6 +4,7 @@ import './App.css';
 import ImageMasonry from 'react-image-masonry';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
+import 'nodelist-foreach-polyfill';
 
 class App extends Component {
   constructor(props) {
