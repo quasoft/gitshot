@@ -1,43 +1,23 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import loader from'./loader.gif';
 import './App.css';
 import ImageMasonry from 'react-image-masonry';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
 import 'nodelist-foreach-polyfill';
+import Repository from './Repository.js';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.repositories = [];
-    this.flippers = {};
     this.state = {
       ready: false,
       repositories: [],
-      width: this.getWindowWidth()
+      windowWidth: this.getWindowWidth()
     };
     this.resizeTimer = null;
-    this.handleImageLoaded = this.handleImageLoaded.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
-  }
-
-  handleImageLoaded(e) {
-    // Update height of the flipper container to that of the image
-    let img = ReactDOM.findDOMNode(e.target)
-    if (img) {
-      let flipper = img.parentElement.parentElement;
-      let table = flipper.querySelector('table');
-      let divs = flipper.querySelectorAll('div');
-      if (table && divs) {
-        divs.forEach(div => {
-          let cardHeight = Math.max(img.clientHeight, table.clientHeight);
-          cardHeight = Math.max(cardHeight, 100);
-          let px = cardHeight + 'px';
-          this.flippers[flipper.id].style.height = px;
-          div.style.height = px;
-        });
-      }
-    }
   }
 
   getWindowWidth() {
@@ -51,7 +31,7 @@ class App extends Component {
 
   handleWindowResize() {
     let width = this.getWindowWidth();
-    this.setState({width: width});
+    this.setState({windowWidth: width});
     this.forceUpdate();
   }
 
@@ -59,14 +39,7 @@ class App extends Component {
     return `https://raw.githubusercontent.com/quasoft/trending-daily/master/${date}.json`;
   }
 
-  componentDidMount() {
-    window.addEventListener("resize", () => {
-      if (this.resizeTimer) {
-        clearTimeout(this.resizeTimer);
-      }
-      this.resizeTimer = setTimeout(this.handleWindowResize, 1);
-    });
-    
+  loadRepositories() {
     let yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday = yesterday.toISOString().slice(0, 10)
@@ -94,6 +67,17 @@ class App extends Component {
       });
   }
 
+  componentDidMount() {
+    window.addEventListener("resize", () => {
+      if (this.resizeTimer) {
+        clearTimeout(this.resizeTimer);
+      }
+      this.resizeTimer = setTimeout(this.handleWindowResize, 1);
+    });
+    
+    this.loadRepositories();
+  }
+
   componentWillUnmount() {
     if (this.resizeTimer) {
       clearTimeout(this.resizeTimer);
@@ -104,13 +88,20 @@ class App extends Component {
 
   render() {
     if (!this.state.ready) {
-      return <div>Loading...</div>;
+      return(
+        <div id="waiting-overlay" class="waiting overlay">
+          <div class="loader">
+            <div class="inner"><span>GitShot loading...</span><br/><img src={loader} />
+            </div>
+          </div>
+        </div>
+      );
     }
 
     let numberOfColumns = 3;
-    if (this.state.width < 480)
+    if (this.state.windowWidth < 480)
       numberOfColumns = 1
-    else if (this.state.width < 800)
+    else if (this.state.windowWidth < 800)
       numberOfColumns = 2;
 
     return (
@@ -127,32 +118,17 @@ class App extends Component {
           numCols={numberOfColumns}
           containerWidth={"100%"}
         >
-        {this.state.repositories.map((repo, i) => {
-          return (
-          <div key={i} className="flip-container tile">
-          <div id={`flipper${i}`} className="flipper" ref={(div) => {if (div) {this.flippers[div.id] = div; }}} onTouchStart={() => this.classList.toggle('hover')} >
-            <div className="front" id={`front${i}`}>
-              <span className="helper"></span><img src={repo.Screenshot} alt={repo.Name} onLoad={this.handleImageLoaded.bind(this)} />
-            </div>
-            <div className="back" id={`back${i}`}>
-              <table className="content">
-              <tbody>
-                <tr>
-                  <td>
-                    <a href={repo.URL}>
-                      <span className="repo-title">{repo.Name}:</span>
-                    </a>
-                    <br />
-                    <span className="repo-desc">{repo.Description}</span>
-                  </td>
-                </tr>
-              </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
-        );
-        })}
+          {this.state.repositories.map((repo, i) => {
+            return (
+              <Repository
+                key={i}
+                Name={repo.Name}
+                URL={repo.URL}
+                Screenshot={repo.Screenshot}
+                Description={repo.Description}
+              />
+            );
+          })}
         </ImageMasonry>
       </div>
     );
