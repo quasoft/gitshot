@@ -8,11 +8,11 @@
 	padding: 10px;
 }
 
-/*  UPDATED! flip the pane when hovered */
-.flip-container:hover .back, .flip-container.hover .back {
+/*  UPDATED! flip the pane only when clicked */
+.flipper.hover .back {
 	transform: rotateY(0deg);
 }
-.flip-container:hover .front, .flip-container.hover .front {
+.flipper.hover .front {
 	transform: rotateY(180deg);
 }
 

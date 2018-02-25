@@ -32,7 +32,7 @@ class Repository extends Component {
       <div className="flip-container tile">
         <div className={`flipper ${this.state.flipped ? 'hover' : ''}`}
              ref={(div) => {if (div) {this.container = div; }}}
-             onClick={() => this.setState({flipped: true})}
+             onClick={() => this.setState({flipped: !this.state.flipped})}
         >
           <div className="front">
             <span className="helper"></span>
@@ -43,7 +43,7 @@ class Repository extends Component {
               <tbody>
                 <tr>
                   <td>
-                    <a href={this.props.URL}>
+                    <a href={this.props.URL}  onClick={(e) => e.stopPropagation()}>
                       <span className="repo-title">{this.props.Name}:</span>
                     </a>
                     <br />
