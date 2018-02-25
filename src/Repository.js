@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import './Repository.css';
 
 class Repository extends Component {
   constructor(props) {

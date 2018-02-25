@@ -89,9 +89,9 @@ class App extends Component {
   render() {
     if (!this.state.ready) {
       return(
-        <div id="waiting-overlay" class="waiting overlay">
-          <div class="loader">
-            <div class="inner"><span>GitShot loading...</span><br/><img src={loader} />
+        <div id="waiting-overlay" className="waiting overlay">
+          <div className="loader">
+            <div className="inner"><span>GitShot loading...</span><br/><img src={loader} alt="Loading animation"/>
             </div>
           </div>
         </div>
