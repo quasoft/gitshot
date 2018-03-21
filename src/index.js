@@ -4,5 +4,5 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App numberOfDays="3" />, document.getElementById('root'));
+ReactDOM.render(<App numberOfDays="1" />, document.getElementById('root'));
 registerServiceWorker();
