@@ -10,7 +10,9 @@ The project was created as an experiment for learning React.js and practicing AW
 
 [Live demo](https://quasoft.github.io/gitshot/)
 
-[Screenshot of GitShot](docs/gitshot-screenshot.jpg)
+### Screenshot of GitShot (pun intended):
+
+![Screenshot of GitShot](docs/gitshot-screenshot.jpg)
 
 ## Credits
 - The Changelog, for putting up [the changelog nightly newsletter](https://changelog.com/nightly), where we take the information about trending GitHub repositories from;
