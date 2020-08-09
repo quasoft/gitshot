@@ -16,7 +16,7 @@ The project was created as an experiment for learning React.js and practicing AW
 
 ## Credits
 - The Changelog, for putting up [the changelog nightly newsletter](https://changelog.com/nightly), where we take the information about trending GitHub repositories from;
-- [christinakayastha](https://github.com/christinakayastha) for the easy to use [react masonry gallery component](https://github.com/christinakayastha/react-image-masonry);
+- [christikaes](https://github.com/christikaes) for the easy to use [react masonry gallery component](https://github.com/christinakayastha/react-image-masonry);
 - David Walsh, for the [clean and toughtful CSS flip example](https://davidwalsh.name/css-flip)
 - [Icon8](https://icons8.com/) for this [Screenshot icon](https://www.iconfinder.com/icons/2639913/screenshot_icon#size=256).
 
